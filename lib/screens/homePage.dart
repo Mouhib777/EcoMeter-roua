@@ -65,15 +65,15 @@ class _HomePageState extends State<HomePage> {
         ),
         animatedIcon: AnimatedIcons.menu_close,
         children: [
+          // SpeedDialChild(
+          //   child: Icon(CupertinoIcons.chart_bar_square),
+          //   label: 'Per Month (30d)',
+          //   onTap: () {
+          //     print('Button 1 Pressed!');
+          //   },
+          // ),
           SpeedDialChild(
-            child: Icon(CupertinoIcons.chart_bar_square),
-            label: 'Per Month (30d)',
-            onTap: () {
-              print('Button 1 Pressed!');
-            },
-          ),
-          SpeedDialChild(
-            child: Icon(Icons.share),
+            child: Icon(Icons.add_chart),
             label: 'Per Day (24h)',
             onTap: () {
               Navigator.push(context,
@@ -81,7 +81,7 @@ class _HomePageState extends State<HomePage> {
             },
           ),
           SpeedDialChild(
-            child: Icon(Icons.save),
+            child: Icon(Icons.add_chart_outlined),
             label: 'Per Hour (1h)',
             onTap: () {
               Navigator.push(
