@@ -1,6 +1,7 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:roua_benamor/screens/login.dart';
+import 'package:roua_benamor/screens/splashScreen.dart';
 import 'firebase_options.dart';
 
 void main() async {
@@ -8,6 +9,9 @@ void main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+  ErrorWidget.builder = (FlutterErrorDetails errorDetails) {
+    return Scaffold(body: Center(child: Text("Unexpected error.")));
+  };
   runApp(const MyApp());
 }
 
@@ -23,7 +27,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: LoginScreen(),
+      home: splashScreen(),
     );
   }
 }
