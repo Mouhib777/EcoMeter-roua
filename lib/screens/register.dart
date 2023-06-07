@@ -12,12 +12,11 @@ class RegisterScreen extends StatefulWidget {
 }
 
 class _RegisterScreenState extends State<RegisterScreen> {
-  bool _acceptedTerms = false;
   String? email;
   String? f_name;
   String? password;
   String? p_confirm;
-  var _fNameController = TextEditingController();
+
   var _emailController = TextEditingController();
   var _passwordController = TextEditingController();
   var _confirmController = TextEditingController();
