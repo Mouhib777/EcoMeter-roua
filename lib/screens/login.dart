@@ -14,7 +14,6 @@ class _LoginScreenState extends State<LoginScreen> {
   String? email;
   String? password;
   String? p_confirm;
-  var _emailController = TextEditingController();
   var _passwordController = TextEditingController();
   bool _obscureText = true;
   bool _isLoading = false;
