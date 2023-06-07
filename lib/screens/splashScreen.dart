@@ -17,7 +17,7 @@ class _splashScreenState extends State<splashScreen> {
   void initState() {
     Timer(
         Duration(
-          seconds: 3,
+          seconds: 1,
         ), () async {
       FirebaseAuth.instance.authStateChanges().listen((User? user) {
         if (user == null) {
@@ -43,12 +43,8 @@ class _splashScreenState extends State<splashScreen> {
     return Scaffold(
         backgroundColor: Colors.white,
         body: Center(
-            child:
-                Column(mainAxisAlignment: MainAxisAlignment.center, children: [
-          Text(
-            "Loading...",
-            style: TextStyle(fontWeight: FontWeight.w500, fontSize: 20),
-          )
-        ])));
+            child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [Image.asset("assets/images/logo.png")])));
   }
 }

@@ -177,6 +177,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                   .set({
                                 "email": "$email",
                                 "password": "$password",
+                                "verifié": "non"
                               });
                               Navigator.of(context).push(PageRouteBuilder(
                                   transitionDuration: Duration.zero,
