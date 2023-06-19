@@ -49,7 +49,7 @@ class MyApp extends StatelessWidget {
     );
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      title: 'EcoMeter',
+      title: 'Eco-SEE',
       theme: myTheme,
       builder: EasyLoading.init(),
       home: splashScreen(),

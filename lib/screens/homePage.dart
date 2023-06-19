@@ -111,7 +111,7 @@ class _HomePageState extends State<HomePage> {
         ),
         appBar: AppBar(
           title: Text(
-            'Eco-See',
+            'Eco-SEE',
             style: GoogleFonts.montserrat(letterSpacing: 2),
           ),
           centerTitle: true,

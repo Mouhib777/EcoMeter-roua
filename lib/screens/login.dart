@@ -31,13 +31,13 @@ class _LoginScreenState extends State<LoginScreen> {
             height: MediaQuery.of(context).size.height,
             child: Padding(
               padding: EdgeInsets.symmetric(horizontal: 30.0),
-              child: FadeInDownBig(
+              child: FadeIn(
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    FadeIn(
-                      delay: Duration(milliseconds: 1400),
+                    FadeInUp(
+                      // delay: Duration(milliseconds: 500),
                       child: Image.asset(
                         "assets/images/logo_society.jpg",
                       ),

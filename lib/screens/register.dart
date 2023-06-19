@@ -4,6 +4,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:roua_benamor/constant/constant.dart';
 import 'package:roua_benamor/screens/homePage.dart';
 
 class RegisterScreen extends StatefulWidget {
@@ -28,6 +30,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
     return Form(
       key: _formKey,
       child: Scaffold(
+        backgroundColor: Colors.white,
         body: SingleChildScrollView(
           child: Container(
             height: MediaQuery.of(context).size.height,
@@ -38,13 +41,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   FadeIn(
-                    child: Text(
-                      'EcoMeter',
-                      style: TextStyle(
-                        fontSize: 40.0,
-                        color: Colors.red,
-                        fontWeight: FontWeight.bold,
-                      ),
+                    child: Image.asset(
+                      "assets/images/logo_society.jpg",
                     ),
                   ),
                   SizedBox(height: 30.0),
@@ -52,6 +50,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     child: SizedBox(
                       width: 330,
                       child: TextFormField(
+                        style: GoogleFonts.montserrat(),
                         controller: _emailController,
                         decoration: InputDecoration(
                           hintText: 'address@mail.com',
@@ -82,6 +81,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     child: SizedBox(
                       width: 330,
                       child: TextFormField(
+                        style: GoogleFonts.montserrat(),
                         controller: _passwordController,
                         decoration: InputDecoration(
                           hintText: 'Password',
@@ -127,6 +127,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     child: SizedBox(
                       width: 330,
                       child: TextFormField(
+                        style: GoogleFonts.montserrat(),
                         controller: _confirmController,
                         decoration: InputDecoration(
                           hintText: 'Confirm Password',
@@ -156,7 +157,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   SizedBox(height: 40.0),
                   FadeInLeft(
                     child: Container(
-                      width: double.infinity,
+                      width: 330,
                       child: ElevatedButton(
                         onPressed: () async {
                           if (_formKey.currentState!.validate()) {
@@ -235,7 +236,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           }
                         },
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.red,
+                          backgroundColor: primaryColor,
                           padding: EdgeInsets.all(16.0),
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(10.0),
