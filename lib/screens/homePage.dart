@@ -86,6 +86,7 @@ class _HomePageState extends State<HomePage> {
           animatedIcon: AnimatedIcons.menu_close,
           children: [
             SpeedDialChild(
+              labelStyle: GoogleFonts.montserrat(),
               child: Icon(Icons.add_chart),
               label: 'Per Day (24h)',
               onTap: () {
@@ -96,6 +97,7 @@ class _HomePageState extends State<HomePage> {
               },
             ),
             SpeedDialChild(
+              labelStyle: GoogleFonts.montserrat(),
               child: Icon(Icons.add_chart_outlined),
               label: 'Per Hour (1h)',
               onTap: () {
@@ -131,10 +133,10 @@ class _HomePageState extends State<HomePage> {
                   children: [
                     Text(
                       'Instant Data',
-                      style: TextStyle(
-                        fontSize: 24,
-                        fontWeight: FontWeight.bold,
-                      ),
+                      style: GoogleFonts.montserrat(
+                          fontSize: 24,
+                          fontWeight: FontWeight.bold,
+                          color: secondaryColor),
                     ),
                     SizedBox(height: 16.0),
                     Expanded(
@@ -147,7 +149,7 @@ class _HomePageState extends State<HomePage> {
                                 borderRadius: BorderRadius.circular(8.0),
                                 boxShadow: [
                                   BoxShadow(
-                                    color: Colors.grey.withOpacity(0.3),
+                                    color: primaryColor.withOpacity(0.3),
                                     spreadRadius: 2,
                                     blurRadius: 5,
                                     offset: Offset(0, 3),
@@ -159,7 +161,7 @@ class _HomePageState extends State<HomePage> {
                                 children: [
                                   Text(
                                     'Last Date',
-                                    style: TextStyle(
+                                    style: GoogleFonts.montserrat(
                                       fontSize: 16,
                                       fontWeight: FontWeight.bold,
                                     ),
@@ -169,7 +171,7 @@ class _HomePageState extends State<HomePage> {
                                     data.isNotEmpty
                                         ? data.last[0].toString()
                                         : '',
-                                    style: TextStyle(
+                                    style: GoogleFonts.montserrat(
                                       fontSize: 20,
                                       fontWeight: FontWeight.bold,
                                     ),
@@ -181,7 +183,7 @@ class _HomePageState extends State<HomePage> {
                                     data.isNotEmpty
                                         ? data.last[1].toString()
                                         : '',
-                                    style: TextStyle(
+                                    style: GoogleFonts.montserrat(
                                       fontSize: 14,
                                       fontWeight: FontWeight.w400,
                                     ),
@@ -198,7 +200,7 @@ class _HomePageState extends State<HomePage> {
                                 borderRadius: BorderRadius.circular(8.0),
                                 boxShadow: [
                                   BoxShadow(
-                                    color: Colors.grey.withOpacity(0.3),
+                                    color: primaryColor.withOpacity(0.3),
                                     spreadRadius: 2,
                                     blurRadius: 5,
                                     offset: Offset(0, 3),
@@ -210,7 +212,7 @@ class _HomePageState extends State<HomePage> {
                                 children: [
                                   Text(
                                     'Alert',
-                                    style: TextStyle(
+                                    style: GoogleFonts.montserrat(
                                       fontSize: 20,
                                       fontWeight: FontWeight.bold,
                                     ),
@@ -219,7 +221,7 @@ class _HomePageState extends State<HomePage> {
                                   Text(
                                     message_display,
                                     textAlign: TextAlign.center,
-                                    style: TextStyle(
+                                    style: GoogleFonts.montserrat(
                                       fontSize: 14,
                                       color: message == 'TRUE'
                                           ? Colors.red
@@ -245,7 +247,7 @@ class _HomePageState extends State<HomePage> {
                                 borderRadius: BorderRadius.circular(8.0),
                                 boxShadow: [
                                   BoxShadow(
-                                    color: Colors.grey.withOpacity(0.3),
+                                    color: primaryColor.withOpacity(0.3),
                                     spreadRadius: 2,
                                     blurRadius: 5,
                                     offset: Offset(0, 3),
@@ -257,7 +259,7 @@ class _HomePageState extends State<HomePage> {
                                 children: [
                                   Text(
                                     'Current',
-                                    style: TextStyle(
+                                    style: GoogleFonts.montserrat(
                                       fontSize: 20,
                                       fontWeight: FontWeight.bold,
                                     ),
@@ -267,7 +269,7 @@ class _HomePageState extends State<HomePage> {
                                     data.isNotEmpty
                                         ? data.last[3].toString() + ' A'
                                         : '',
-                                    style: TextStyle(
+                                    style: GoogleFonts.montserrat(
                                       fontSize: 20,
                                       fontWeight: FontWeight.bold,
                                     ),
@@ -287,7 +289,7 @@ class _HomePageState extends State<HomePage> {
                                 borderRadius: BorderRadius.circular(8.0),
                                 boxShadow: [
                                   BoxShadow(
-                                    color: Colors.grey.withOpacity(0.3),
+                                    color: primaryColor.withOpacity(0.3),
                                     spreadRadius: 2,
                                     blurRadius: 5,
                                     offset: Offset(0, 3),
@@ -299,7 +301,7 @@ class _HomePageState extends State<HomePage> {
                                 children: [
                                   Text(
                                     'Energy',
-                                    style: TextStyle(
+                                    style: GoogleFonts.montserrat(
                                       fontSize: 20,
                                       fontWeight: FontWeight.bold,
                                     ),
@@ -309,7 +311,7 @@ class _HomePageState extends State<HomePage> {
                                     data.isNotEmpty
                                         ? data.last[4].toString() + ' KWH'
                                         : '',
-                                    style: TextStyle(
+                                    style: GoogleFonts.montserrat(
                                       fontSize: 20,
                                       fontWeight: FontWeight.bold,
                                     ),
@@ -332,7 +334,7 @@ class _HomePageState extends State<HomePage> {
                                 borderRadius: BorderRadius.circular(8.0),
                                 boxShadow: [
                                   BoxShadow(
-                                    color: Colors.grey.withOpacity(0.3),
+                                    color: primaryColor.withOpacity(0.3),
                                     spreadRadius: 2,
                                     blurRadius: 5,
                                     offset: Offset(0, 3),
@@ -344,7 +346,7 @@ class _HomePageState extends State<HomePage> {
                                 children: [
                                   Text(
                                     'Voltage',
-                                    style: TextStyle(
+                                    style: GoogleFonts.montserrat(
                                       fontSize: 20,
                                       fontWeight: FontWeight.bold,
                                     ),
@@ -354,7 +356,7 @@ class _HomePageState extends State<HomePage> {
                                     data.isNotEmpty
                                         ? data.last[5].toString() + ' V'
                                         : '',
-                                    style: TextStyle(
+                                    style: GoogleFonts.montserrat(
                                       fontSize: 20,
                                       fontWeight: FontWeight.bold,
                                     ),
@@ -374,7 +376,7 @@ class _HomePageState extends State<HomePage> {
                                 borderRadius: BorderRadius.circular(8.0),
                                 boxShadow: [
                                   BoxShadow(
-                                    color: Colors.grey.withOpacity(0.3),
+                                    color: primaryColor.withOpacity(0.3),
                                     spreadRadius: 2,
                                     blurRadius: 5,
                                     offset: Offset(0, 3),
@@ -386,7 +388,7 @@ class _HomePageState extends State<HomePage> {
                                 children: [
                                   Text(
                                     'Power',
-                                    style: TextStyle(
+                                    style: GoogleFonts.montserrat(
                                       fontSize: 20,
                                       fontWeight: FontWeight.bold,
                                     ),
@@ -396,7 +398,7 @@ class _HomePageState extends State<HomePage> {
                                     data.isNotEmpty
                                         ? data.last[6].toString() + ' KW'
                                         : '',
-                                    style: TextStyle(
+                                    style: GoogleFonts.montserrat(
                                       fontSize: 20,
                                       fontWeight: FontWeight.bold,
                                     ),
@@ -413,11 +415,15 @@ class _HomePageState extends State<HomePage> {
                     ),
                     Row(
                       children: [
+                        SizedBox(
+                          width: 5,
+                        ),
                         Text(
                           'All Data',
-                          style: TextStyle(
+                          style: GoogleFonts.montserrat(
                             fontSize: 20,
                             fontWeight: FontWeight.bold,
+                            color: secondaryColor,
                           ),
                         ),
                         SizedBox(
@@ -425,7 +431,8 @@ class _HomePageState extends State<HomePage> {
                         ),
                         Text(
                           data.length.toString(),
-                          style: TextStyle(fontSize: 14, color: Colors.grey),
+                          style: GoogleFonts.montserratAlternates(
+                              fontSize: 14, color: Colors.grey),
                         )
                       ],
                     ),
@@ -467,15 +474,33 @@ class _HomePageState extends State<HomePage> {
                           }
 
                           return ListTile(
-                            title: Text('Time: $time'),
+                            title: Text(
+                              'Time: $time',
+                              style: GoogleFonts.montserrat(),
+                            ),
                             subtitle: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Text('Alerte: $alerte'),
-                                Text('Current: $current'),
-                                Text('Energy: $energy'),
-                                Text('Voltage: $voltage'),
-                                Text('Power: $power'),
+                                Text(
+                                  'Alerte: $alerte',
+                                  style: GoogleFonts.montserrat(),
+                                ),
+                                Text(
+                                  'Current: $current',
+                                  style: GoogleFonts.montserrat(),
+                                ),
+                                Text(
+                                  'Energy: $energy',
+                                  style: GoogleFonts.montserrat(),
+                                ),
+                                Text(
+                                  'Voltage: $voltage',
+                                  style: GoogleFonts.montserrat(),
+                                ),
+                                Text(
+                                  'Power: $power',
+                                  style: GoogleFonts.montserrat(),
+                                ),
                               ],
                             ),
                           );
