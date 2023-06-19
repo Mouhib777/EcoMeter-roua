@@ -2,6 +2,7 @@ import 'package:animate_do/animate_do.dart';
 import 'package:animated_snack_bar/animated_snack_bar.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:roua_benamor/screens/homePage.dart';
 import 'package:roua_benamor/screens/register.dart';
 
@@ -37,14 +38,21 @@ class _LoginScreenState extends State<LoginScreen> {
                     FadeIn(
                       delay: Duration(milliseconds: 1400),
                       child: Image.asset(
-                        'EcoMeter',
+                        "assets/images/logo_society.jpg",
                       ),
                     ),
                     SizedBox(height: 30.0),
                     SizedBox(
                       width: 350,
                       child: TextField(
+                        style: GoogleFonts.montserrat(),
                         decoration: InputDecoration(
+                          labelStyle: GoogleFonts.montserrat(),
+                          hintStyle: GoogleFonts.montserrat(),
+                          prefixStyle: GoogleFonts.montserrat(),
+                          counterStyle: GoogleFonts.montserrat(),
+                          suffixStyle: GoogleFonts.montserrat(),
+                          floatingLabelStyle: GoogleFonts.montserrat(),
                           hintText: 'address@mail.com',
                           border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(15)),
@@ -65,8 +73,15 @@ class _LoginScreenState extends State<LoginScreen> {
                     SizedBox(
                       width: 350,
                       child: TextFormField(
+                        style: GoogleFonts.montserrat(),
                         controller: _passwordController,
                         decoration: InputDecoration(
+                          labelStyle: GoogleFonts.montserrat(),
+                          hintStyle: GoogleFonts.montserrat(),
+                          prefixStyle: GoogleFonts.montserrat(),
+                          counterStyle: GoogleFonts.montserrat(),
+                          suffixStyle: GoogleFonts.montserrat(),
+                          floatingLabelStyle: GoogleFonts.montserrat(),
                           suffixIcon: IconButton(
                             icon: Icon(
                               _obscureText
@@ -163,7 +178,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           }
                         },
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.red,
+                          backgroundColor: Color(0xFF19278a),
                           padding: EdgeInsets.all(16.0),
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(10.0),
@@ -171,7 +186,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         ),
                         child: Text(
                           'Sign in',
-                          style: TextStyle(
+                          style: GoogleFonts.montserratAlternates(
                               fontSize: 18.0,
                               fontWeight: FontWeight.bold,
                               letterSpacing: 3),
@@ -191,7 +206,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       children: [
                         Text(
                           "don't have an account",
-                          style: TextStyle(color: Colors.grey),
+                          style: GoogleFonts.montserrat(color: Colors.grey),
                         ),
                         SizedBox(
                           width: 10,
@@ -205,9 +220,9 @@ class _LoginScreenState extends State<LoginScreen> {
                           },
                           child: Text(
                             "Register now",
-                            style: TextStyle(
+                            style: GoogleFonts.montserrat(
                                 fontSize: 20,
-                                color: Colors.blue,
+                                color: Color(0xffa2061b),
                                 fontWeight: FontWeight.w600),
                           ),
                         )
