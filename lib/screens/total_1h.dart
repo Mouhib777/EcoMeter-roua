@@ -86,10 +86,10 @@ class _total_1hState extends State<total_1h> {
         ),
         series: <ChartSeries<DataPoint, DateTime>>[
           LineSeries<DataPoint, DateTime>(
-            dataSource: data,
-            xValueMapper: (DataPoint point, _) => point.timestamp,
-            yValueMapper: (DataPoint point, _) => point.value,
-          ),
+              dataSource: data,
+              xValueMapper: (DataPoint point, _) => point.timestamp,
+              yValueMapper: (DataPoint point, _) => point.value,
+              color: secondaryColor),
         ],
       ),
     );
