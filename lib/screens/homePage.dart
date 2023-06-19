@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
 import 'package:csv/csv.dart';
 import 'package:roua_benamor/constant/constant.dart';
@@ -73,9 +74,12 @@ class _HomePageState extends State<HomePage> {
     }
     return Scaffold(
         floatingActionButton: SpeedDial(
-          label: Text("Charts"),
+          label: Text(
+            "Charts",
+            style: GoogleFonts.montserratAlternates(),
+          ),
           elevation: 6.0,
-          backgroundColor: Colors.blue,
+          backgroundColor: Color(0xffa2061b),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.all(Radius.circular(16.0)),
           ),
@@ -105,8 +109,8 @@ class _HomePageState extends State<HomePage> {
         ),
         appBar: AppBar(
           title: Text(
-            'EcoMeter',
-            style: TextStyle(letterSpacing: 2),
+            'Eco-See',
+            style: GoogleFonts.montserrat(letterSpacing: 2),
           ),
           centerTitle: true,
           leading: IconButton(
@@ -482,7 +486,11 @@ class _HomePageState extends State<HomePage> {
                 ),
               )
             : Center(
-                child: Text("You are not verified, contact the support"),
+                child: Text(
+                  "You are not verified, contact the support",
+                  style: GoogleFonts.montserrat(
+                      color: Color(0xffa2061b), fontWeight: FontWeight.w500),
+                ),
               ));
   }
 }
