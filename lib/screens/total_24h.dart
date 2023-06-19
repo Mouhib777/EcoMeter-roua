@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
 import 'package:csv/csv.dart';
 import 'package:roua_benamor/constant/constant.dart';
@@ -45,7 +46,11 @@ class _total_24hState extends State<total_24h> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Total Consumption Energy (24h)'),
+        centerTitle: true,
+        title: Text(
+          'Total Consumption Energy (24h)',
+          style: GoogleFonts.montserrat(fontSize: 16),
+        ),
       ),
       body: FutureBuilder<List<DataPoint>>(
         future: fetchDataFromGoogleSheets(),
@@ -75,11 +80,11 @@ class _total_24hState extends State<total_24h> {
       primaryXAxis: CategoryAxis(),
       series: <ChartSeries<DataPoint, String>>[
         LineSeries<DataPoint, String>(
-          dataSource: data,
-          xValueMapper: (DataPoint point, _) =>
-              DateFormat('dd/MM/yyyy').format(point.timestamp),
-          yValueMapper: (DataPoint point, _) => point.value,
-        ),
+            dataSource: data,
+            xValueMapper: (DataPoint point, _) =>
+                DateFormat('dd/MM/yyyy').format(point.timestamp),
+            yValueMapper: (DataPoint point, _) => point.value,
+            color: secondaryColor),
       ],
     );
   }
