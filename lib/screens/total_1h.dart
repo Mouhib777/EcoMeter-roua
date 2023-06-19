@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
 import 'package:csv/csv.dart';
 import 'package:roua_benamor/constant/constant.dart';
@@ -46,7 +47,11 @@ class _total_1hState extends State<total_1h> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Total Consumption Energy (1h)'),
+        centerTitle: true,
+        title: Text(
+          'Total Consumption Energy (1h)',
+          style: GoogleFonts.montserrat(fontSize: 16),
+        ),
       ),
       body: FutureBuilder<List<DataPoint>>(
         future: fetchDataFromGoogleSheets(),
