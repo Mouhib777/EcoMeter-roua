@@ -36,13 +36,8 @@ class _LoginScreenState extends State<LoginScreen> {
                   children: [
                     FadeIn(
                       delay: Duration(milliseconds: 1400),
-                      child: Text(
+                      child: Image.asset(
                         'EcoMeter',
-                        style: TextStyle(
-                          fontSize: 40.0,
-                          color: Colors.red,
-                          fontWeight: FontWeight.bold,
-                        ),
                       ),
                     ),
                     SizedBox(height: 30.0),
