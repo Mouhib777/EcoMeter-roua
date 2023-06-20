@@ -32,7 +32,7 @@ class _total_24hState extends State<total_24h> {
           rowsAsListOfValues.skip(0).map<DataPoint>((row) {
         final dateFormatter = DateFormat('dd/MM/yyyy');
         final timestamp = dateFormatter.parse(row[0].toString());
-        final value = double.parse(row[2].toString());
+        final value = double.parse(row[2].toString().replaceAll(',', '.'));
         return DataPoint(timestamp, value);
       }).toList();
 
