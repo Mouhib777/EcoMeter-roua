@@ -5,7 +5,6 @@ import 'package:csv/csv.dart';
 import 'package:roua_benamor/constant/constant.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 import 'package:intl/intl.dart';
-import 'dart:async';
 
 class total_1h extends StatefulWidget {
   @override
@@ -13,31 +12,15 @@ class total_1h extends StatefulWidget {
 }
 
 class _total_1hState extends State<total_1h> {
-  List<DataPoint> data = [];
-  Timer? dataTimer;
+  List<List<dynamic>> sheetData = [];
 
   @override
   void initState() {
     super.initState();
-    fetchDataFromGoogleSheets(); // Fetch data initially
-    startDataTimer(); // Start the timer for periodic data fetching
+    fetchDataFromGoogleSheets();
   }
 
-  @override
-  void dispose() {
-    dataTimer?.cancel(); // Cancel the timer when the widget is disposed
-    super.dispose();
-  }
-
-  void startDataTimer() {
-    const interval =
-        Duration(seconds: 10); // Update interval (1 minute in this example)
-    dataTimer = Timer.periodic(interval, (timer) {
-      fetchDataFromGoogleSheets(); // Fetch data periodically
-    });
-  }
-
-  Future<void> fetchDataFromGoogleSheets() async {
+  Future<List<DataPoint>> fetchDataFromGoogleSheets() async {
     final response = await http.get(Uri.parse(url2GoogleSheet));
 
     if (response.statusCode == 200) {
@@ -45,7 +28,7 @@ class _total_1hState extends State<total_1h> {
       final List<List<dynamic>> rowsAsListOfValues =
           CsvToListConverter().convert(csvData);
 
-      final List<DataPoint> fetchedData = rowsAsListOfValues
+      final List<DataPoint> data = rowsAsListOfValues
           .skip(rowsAsListOfValues.length - 1000)
           .map<DataPoint>((row) {
         final timeFormatter = DateFormat('hh:mm:ss');
@@ -56,9 +39,7 @@ class _total_1hState extends State<total_1h> {
         return DataPoint(timestamp, value);
       }).toList();
 
-      setState(() {
-        data = fetchedData; // Update the data and trigger a rebuild
-      });
+      return data;
     } else {
       throw Exception('Failed to fetch data from Google Sheets');
     }
@@ -74,15 +55,24 @@ class _total_1hState extends State<total_1h> {
           style: GoogleFonts.montserrat(fontSize: 16),
         ),
       ),
-      body: buildChart(),
+      body: FutureBuilder<List<DataPoint>>(
+        future: fetchDataFromGoogleSheets(),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return Center(child: CircularProgressIndicator());
+          } else if (snapshot.hasError) {
+            return Center(child: Text('Error fetching data'));
+          } else if (snapshot.hasData) {
+            return buildChart(snapshot.data!);
+          } else {
+            return Center(child: Text('No data available'));
+          }
+        },
+      ),
     );
   }
 
-  Widget buildChart() {
-    if (data.isEmpty) {
-      return Center(child: CircularProgressIndicator());
-    }
-
+  Widget buildChart(List<DataPoint> data) {
     return Container(
       width: MediaQuery.of(context).size.width,
       child: SfCartesianChart(
@@ -98,11 +88,10 @@ class _total_1hState extends State<total_1h> {
         ),
         series: <ChartSeries<DataPoint, DateTime>>[
           LineSeries<DataPoint, DateTime>(
-            dataSource: data,
-            xValueMapper: (DataPoint point, _) => point.timestamp,
-            yValueMapper: (DataPoint point, _) => point.value,
-            color: secondaryColor,
-          ),
+              dataSource: data,
+              xValueMapper: (DataPoint point, _) => point.timestamp,
+              yValueMapper: (DataPoint point, _) => point.value,
+              color: secondaryColor),
         ],
       ),
     );
