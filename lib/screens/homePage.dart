@@ -309,7 +309,7 @@ class _HomePageState extends State<HomePage> {
                                   SizedBox(height: 8.0),
                                   Text(
                                     data.isNotEmpty
-                                        ? data.last[4].toString() + ' KWH'
+                                        ? data.last[4].toString() + ' KW'
                                         : '',
                                     style: GoogleFonts.montserrat(
                                       fontSize: 20,
@@ -396,7 +396,7 @@ class _HomePageState extends State<HomePage> {
                                   SizedBox(height: 8.0),
                                   Text(
                                     data.isNotEmpty
-                                        ? data.last[6].toString() + ' KW'
+                                        ? data.last[6].toString() + ' W'
                                         : '',
                                     style: GoogleFonts.montserrat(
                                       fontSize: 20,
