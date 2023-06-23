@@ -13,6 +13,7 @@ class total_1h extends StatefulWidget {
 
 class _total_1hState extends State<total_1h> {
   List<List<dynamic>> sheetData = [];
+  List<DataPoint> displayedData = [];
 
   @override
   void initState() {
@@ -20,7 +21,7 @@ class _total_1hState extends State<total_1h> {
     fetchDataFromGoogleSheets();
   }
 
-  Future<List<DataPoint>> fetchDataFromGoogleSheets() async {
+  Future<void> fetchDataFromGoogleSheets() async {
     final response = await http.get(Uri.parse(url2GoogleSheet));
 
     if (response.statusCode == 200) {
@@ -28,10 +29,7 @@ class _total_1hState extends State<total_1h> {
       final List<List<dynamic>> rowsAsListOfValues =
           CsvToListConverter().convert(csvData);
 
-      final List<DataPoint> data = rowsAsListOfValues
-          .skip(
-              rowsAsListOfValues.length - 60) // Adjust the number of rows here
-          .map<DataPoint>((row) {
+      final List<DataPoint> data = rowsAsListOfValues.map<DataPoint>((row) {
         final timeFormatter = DateFormat('hh:mm:ss');
         final timestamp = timeFormatter.parse(row[1].toString());
         final value = double.parse(row[2]
@@ -40,10 +38,27 @@ class _total_1hState extends State<total_1h> {
         return DataPoint(timestamp, value);
       }).toList();
 
-      return data;
+      setState(() {
+        sheetData = rowsAsListOfValues;
+        displayedData = data.sublist(data.length - 60);
+      });
     } else {
       throw Exception('Failed to fetch data from Google Sheets');
     }
+  }
+
+  void updateDisplayedData(int startIndex) {
+    setState(() {
+      displayedData =
+          sheetData.sublist(startIndex, startIndex + 60).map<DataPoint>((row) {
+        final timeFormatter = DateFormat('hh:mm:ss');
+        final timestamp = timeFormatter.parse(row[1].toString());
+        final value = double.parse(row[2]
+            .toString()
+            .replaceAll(',', '.')); // Replace comma with period
+        return DataPoint(timestamp, value);
+      }).toList();
+    });
   }
 
   @override
@@ -56,43 +71,51 @@ class _total_1hState extends State<total_1h> {
           style: GoogleFonts.montserrat(fontSize: 16),
         ),
       ),
-      body: FutureBuilder<List<DataPoint>>(
-        future: fetchDataFromGoogleSheets(),
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(child: CircularProgressIndicator());
-          } else if (snapshot.hasError) {
-            return Center(child: Text('Error fetching data'));
-          } else if (snapshot.hasData) {
-            return buildChart(snapshot.data!);
-          } else {
-            return Center(child: Text('No data available'));
-          }
-        },
-      ),
-    );
-  }
+      body: Column(
+        children: [
+          Container(
+            height: 400,
+            child: SfCartesianChart(
+              primaryXAxis: DateTimeAxis(
+                dateFormat: DateFormat.Hms(),
+                intervalType: DateTimeIntervalType.minutes,
+              ),
+              series: <ChartSeries<DataPoint, DateTime>>[
+                LineSeries<DataPoint, DateTime>(
+                  dataSource: displayedData,
+                  xValueMapper: (DataPoint point, _) => point.timestamp,
+                  yValueMapper: (DataPoint point, _) => point.value,
+                  color: secondaryColor,
+                ),
+              ],
+            ),
+          ),
+          Expanded(
+            child: NotificationListener<ScrollNotification>(
+              onNotification: (scrollNotification) {
+                if (scrollNotification is ScrollUpdateNotification) {
+                  final pixels = scrollNotification.metrics.pixels;
+                  final itemExtent = 60.0; // Height of each row in the chart
 
-  Widget buildChart(List<DataPoint> data) {
-    return Container(
-      width: MediaQuery.of(context).size.width,
-      child: SfCartesianChart(
-        zoomPanBehavior: ZoomPanBehavior(
-          enablePanning: true,
-          enableDoubleTapZooming: true,
-          enablePinching: true,
-          zoomMode: ZoomMode.x,
-        ),
-        primaryXAxis: DateTimeAxis(
-          dateFormat: DateFormat.Hms(),
-          intervalType: DateTimeIntervalType.minutes,
-        ),
-        series: <ChartSeries<DataPoint, DateTime>>[
-          LineSeries<DataPoint, DateTime>(
-              dataSource: data,
-              xValueMapper: (DataPoint point, _) => point.timestamp,
-              yValueMapper: (DataPoint point, _) => point.value,
-              color: secondaryColor),
+                  final startIndex = (pixels / itemExtent).floor();
+                  updateDisplayedData(startIndex);
+                }
+                return false;
+              },
+              child: ListView.builder(
+                itemCount: sheetData.length,
+                itemExtent: 60.0, // Height of each row in the chart
+                itemBuilder: (context, index) {
+                  return ListTile(
+                    title: Text(
+                        sheetData[index][1].toString()), // Display timestamp
+                    subtitle:
+                        Text(sheetData[index][2].toString()), // Display value
+                  );
+                },
+              ),
+            ),
+          ),
         ],
       ),
     );
