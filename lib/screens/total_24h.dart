@@ -6,12 +6,12 @@ import 'package:roua_benamor/constant/constant.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 import 'package:intl/intl.dart';
 
-class total_24h extends StatefulWidget {
+class Total24h extends StatefulWidget {
   @override
-  _total_24hState createState() => _total_24hState();
+  _Total24hState createState() => _Total24hState();
 }
 
-class _total_24hState extends State<total_24h> {
+class _Total24hState extends State<Total24h> {
   List<List<dynamic>> sheetData = [];
 
   @override
@@ -30,8 +30,9 @@ class _total_24hState extends State<total_24h> {
 
       final List<DataPoint> data =
           rowsAsListOfValues.skip(0).map<DataPoint>((row) {
-        final dateFormatter = DateFormat('dd/MM/yyyy');
-        final timestamp = dateFormatter.parse(row[0].toString());
+        final dateFormatter = DateFormat('dd/MM/yyyy HH:mm:ss');
+        final timestamp =
+            dateFormatter.parse(row[0].toString() + ' ' + row[1].toString());
         final value = double.parse(row[2].toString().replaceAll(',', '.'));
         return DataPoint(timestamp, value);
       }).toList();
@@ -77,14 +78,17 @@ class _total_24hState extends State<total_24h> {
         enablePinching: true,
         zoomMode: ZoomMode.x,
       ),
-      primaryXAxis: CategoryAxis(),
-      series: <ChartSeries<DataPoint, String>>[
-        LineSeries<DataPoint, String>(
-            dataSource: data,
-            xValueMapper: (DataPoint point, _) =>
-                DateFormat('dd/MM/yyyy').format(point.timestamp),
-            yValueMapper: (DataPoint point, _) => point.value,
-            color: secondaryColor),
+      primaryXAxis: DateTimeAxis(
+        dateFormat: DateFormat.Hm(),
+        intervalType: DateTimeIntervalType.hours,
+      ),
+      series: <ChartSeries<DataPoint, DateTime>>[
+        LineSeries<DataPoint, DateTime>(
+          dataSource: data,
+          xValueMapper: (DataPoint point, _) => point.timestamp,
+          yValueMapper: (DataPoint point, _) => point.value,
+          color: Colors.blue,
+        ),
       ],
     );
   }
