@@ -6,12 +6,12 @@ import 'package:roua_benamor/constant/constant.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 import 'package:intl/intl.dart';
 
-class total_24h extends StatefulWidget {
+class Total24h extends StatefulWidget {
   @override
-  _total_24hState createState() => _total_24hState();
+  _Total24hState createState() => _Total24hState();
 }
 
-class _total_24hState extends State<total_24h> {
+class _Total24hState extends State<Total24h> {
   List<List<dynamic>> sheetData = [];
 
   @override
@@ -28,13 +28,18 @@ class _total_24hState extends State<total_24h> {
       final List<List<dynamic>> rowsAsListOfValues =
           CsvToListConverter().convert(csvData);
 
-      final List<DataPoint> data =
-          rowsAsListOfValues.skip(0).map<DataPoint>((row) {
-        final dateFormatter = DateFormat('dd/MM/yyyy');
-        final timestamp = dateFormatter.parse(row[0].toString());
-        final value = double.parse(row[2].toString().replaceAll(',', '.'));
-        return DataPoint(timestamp, value);
-      }).toList();
+      final List<DataPoint> data = [];
+      int rowCounter = 0;
+
+      for (var row in rowsAsListOfValues) {
+        if (rowCounter % 500 == 0) {
+          final dateFormatter = DateFormat('dd/MM/yyyy');
+          final timestamp = dateFormatter.parse(row[0].toString());
+          final value = double.parse(row[2].toString().replaceAll(',', '.'));
+          data.add(DataPoint(timestamp, value));
+        }
+        rowCounter++;
+      }
 
       return data;
     } else {
@@ -80,11 +85,12 @@ class _total_24hState extends State<total_24h> {
       primaryXAxis: CategoryAxis(),
       series: <ChartSeries<DataPoint, String>>[
         LineSeries<DataPoint, String>(
-            dataSource: data,
-            xValueMapper: (DataPoint point, _) =>
-                DateFormat('dd/MM/yyyy').format(point.timestamp),
-            yValueMapper: (DataPoint point, _) => point.value,
-            color: secondaryColor),
+          dataSource: data,
+          xValueMapper: (DataPoint point, _) =>
+              DateFormat('dd/MM/yyyy').format(point.timestamp),
+          yValueMapper: (DataPoint point, _) => point.value,
+          color: secondaryColor,
+        ),
       ],
     );
   }

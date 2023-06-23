@@ -6,12 +6,12 @@ import 'package:roua_benamor/constant/constant.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 import 'package:intl/intl.dart';
 
-class total_1h extends StatefulWidget {
+class Total1h extends StatefulWidget {
   @override
-  _total_1hState createState() => _total_1hState();
+  _Total1hState createState() => _Total1hState();
 }
 
-class _total_1hState extends State<total_1h> {
+class _Total1hState extends State<Total1h> {
   List<List<dynamic>> sheetData = [];
 
   @override
@@ -28,16 +28,29 @@ class _total_1hState extends State<total_1h> {
       final List<List<dynamic>> rowsAsListOfValues =
           CsvToListConverter().convert(csvData);
 
-      final List<DataPoint> data = rowsAsListOfValues
-          .skip(rowsAsListOfValues.length - 1000)
-          .map<DataPoint>((row) {
+      final List<DataPoint> data = [];
+
+      double sum = 0;
+      int count = 0;
+
+      for (int i = 0; i < rowsAsListOfValues.length; i++) {
+        final row = rowsAsListOfValues[i];
+
         final timeFormatter = DateFormat('hh:mm:ss');
         final timestamp = timeFormatter.parse(row[1].toString());
-        final value = double.parse(row[2]
-            .toString()
-            .replaceAll(',', '.')); // Replace comma with period
-        return DataPoint(timestamp, value);
-      }).toList();
+        final value = double.parse(row[2].toString().replaceAll(',', '.'));
+
+        sum += value;
+        count++;
+
+        if (count == 59) {
+          final average = sum / count;
+          data.add(DataPoint(timestamp, average));
+
+          sum = 0;
+          count = 0;
+        }
+      }
 
       return data;
     } else {
@@ -88,10 +101,14 @@ class _total_1hState extends State<total_1h> {
         ),
         series: <ChartSeries<DataPoint, DateTime>>[
           LineSeries<DataPoint, DateTime>(
-              dataSource: data,
-              xValueMapper: (DataPoint point, _) => point.timestamp,
-              yValueMapper: (DataPoint point, _) => point.value,
-              color: secondaryColor),
+            dataSource: data,
+            xValueMapper: (DataPoint point, _) => point.timestamp,
+            yValueMapper: (DataPoint point, _) => point.value,
+            color: secondaryColor,
+            markerSettings: MarkerSettings(
+              isVisible: true,
+            ),
+          ),
         ],
       ),
     );
