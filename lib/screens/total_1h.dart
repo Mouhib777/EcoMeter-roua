@@ -29,7 +29,8 @@ class _total_1hState extends State<total_1h> {
           CsvToListConverter().convert(csvData);
 
       final List<DataPoint> data = rowsAsListOfValues
-          .skip(rowsAsListOfValues.length - 900)
+          .skip(
+              rowsAsListOfValues.length - 60) // Adjust the number of rows here
           .map<DataPoint>((row) {
         final timeFormatter = DateFormat('hh:mm:ss');
         final timestamp = timeFormatter.parse(row[1].toString());
