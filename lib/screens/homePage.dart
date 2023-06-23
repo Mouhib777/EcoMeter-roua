@@ -103,7 +103,7 @@ class _HomePageState extends State<HomePage> {
               onTap: () {
                 user_data?["verifié"] == "oui"
                     ? Navigator.push(context,
-                        MaterialPageRoute(builder: (context) => Total1h()))
+                        MaterialPageRoute(builder: (context) => total_1h()))
                     : EasyLoading.showError("You don't have the access");
               },
             ),
