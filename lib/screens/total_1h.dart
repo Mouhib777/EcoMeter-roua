@@ -30,15 +30,12 @@ class _total_1hState extends State<total_1h> {
           CsvToListConverter().convert(csvData);
 
       final List<DataPoint> data = rowsAsListOfValues.map<DataPoint>((row) {
-        final dateFormatter = DateFormat('yyyy-MM-dd');
+        final dateFormatter = DateFormat('dd/MM/yyyy');
         final timeFormatter = DateFormat('hh:mm:ss');
-        final date = row[0] != null
-            ? dateFormatter.parse(row[0].toString())
-            : DateTime.now(); // Provide a default date if it is null
+        final date = dateFormatter.parse(row[0].toString());
         final timestamp = timeFormatter.parse(row[1].toString());
-        final value = double.parse(row[2]
-            .toString()
-            .replaceAll(',', '.')); // Replace comma with period
+        final value = double.parse(row[2].toString().replaceAll(',', '.'));
+
         return DataPoint(date, timestamp, value);
       }).toList();
 
@@ -55,15 +52,12 @@ class _total_1hState extends State<total_1h> {
     setState(() {
       displayedData =
           sheetData.sublist(startIndex, startIndex + 60).map<DataPoint>((row) {
-        final dateFormatter = DateFormat('yyyy-MM-dd');
+        final dateFormatter = DateFormat('dd/MM/yyyy');
         final timeFormatter = DateFormat('hh:mm:ss');
-        final date = row[0] != null
-            ? dateFormatter.parse(row[0].toString())
-            : DateTime.now(); // Provide a default date if it is null
+        final date = dateFormatter.parse(row[0].toString());
         final timestamp = timeFormatter.parse(row[1].toString());
-        final value = double.parse(row[2]
-            .toString()
-            .replaceAll(',', '.')); // Replace comma with period
+        final value = double.parse(row[2].toString().replaceAll(',', '.'));
+
         return DataPoint(date, timestamp, value);
       }).toList();
     });
@@ -79,65 +73,70 @@ class _total_1hState extends State<total_1h> {
           style: GoogleFonts.montserrat(fontSize: 16),
         ),
       ),
-      body: Column(
-        children: [
-          Container(
-            height: 400,
-            child: SfCartesianChart(
-              primaryXAxis: DateTimeAxis(
-                dateFormat: DateFormat('yyyy-MM-dd'),
-                intervalType: DateTimeIntervalType.days,
-              ),
-              series: <ChartSeries<DataPoint, DateTime>>[
-                LineSeries<DataPoint, DateTime>(
-                  dataSource: displayedData,
-                  xValueMapper: (DataPoint point, _) => point.date,
-                  yValueMapper: (DataPoint point, _) => point.value,
-                  color: secondaryColor,
+      body: displayedData.isEmpty // Add a check for empty data
+          ? Center(child: CircularProgressIndicator())
+          : Column(
+              children: [
+                Container(
+                  height: 400,
+                  child: SfCartesianChart(
+                    primaryXAxis: DateTimeAxis(
+                      dateFormat: DateFormat('dd/MM/yyyy'),
+                      intervalType: DateTimeIntervalType.days,
+                    ),
+                    series: <ChartSeries<DataPoint, DateTime>>[
+                      LineSeries<DataPoint, DateTime>(
+                        dataSource: displayedData,
+                        xValueMapper: (DataPoint point, _) => point.date,
+                        yValueMapper: (DataPoint point, _) => point.value,
+                        color: Colors.blue,
+                      ),
+                    ],
+                  ),
+                ),
+                Expanded(
+                  child: NotificationListener<ScrollNotification>(
+                    onNotification: (scrollNotification) {
+                      if (scrollNotification is ScrollUpdateNotification) {
+                        final pixels = scrollNotification.metrics.pixels;
+                        final itemExtent =
+                            60.0; // Height of each row in the chart
+
+                        final startIndex = (pixels / itemExtent).floor();
+                        updateDisplayedData(startIndex);
+                      }
+                      return false;
+                    },
+                    child: ListView.builder(
+                      itemCount: displayedData.length,
+                      itemExtent: 60.0, // Height of each row in the chart
+                      itemBuilder: (context, index) {
+                        if (index == 0 ||
+                            displayedData[index].date !=
+                                displayedData[index - 1].date) {
+                          // Display the date once per day
+                          return ListTile(
+                            title: Text(
+                              DateFormat('dd/MM/yyyy')
+                                  .format(displayedData[index].date),
+                              style: TextStyle(fontWeight: FontWeight.bold),
+                            ),
+                          );
+                        } else {
+                          // Display timestamp and value
+                          return ListTile(
+                            title:
+                                Text(displayedData[index].timestamp.toString()),
+                            subtitle:
+                                Text(displayedData[index].value.toString()),
+                          );
+                        }
+                      },
+                    ),
+                  ),
                 ),
               ],
             ),
-          ),
-          Expanded(
-            child: NotificationListener<ScrollNotification>(
-              onNotification: (scrollNotification) {
-                if (scrollNotification is ScrollUpdateNotification) {
-                  final pixels = scrollNotification.metrics.pixels;
-                  final itemExtent = 60.0; // Height of each row in the chart
-
-                  final startIndex = (pixels / itemExtent).floor();
-                  updateDisplayedData(startIndex);
-                }
-                return false;
-              },
-              child: ListView.builder(
-                itemCount: displayedData.length,
-                itemExtent: 60.0, // Height of each row in the chart
-                itemBuilder: (context, index) {
-                  if (index == 0 ||
-                      displayedData[index].date !=
-                          displayedData[index - 1].date) {
-                    // Display the date once per day
-                    return ListTile(
-                      title: Text(
-                        DateFormat('yyyy-MM-dd')
-                            .format(displayedData[index].date),
-                        style: TextStyle(fontWeight: FontWeight.bold),
-                      ),
-                    );
-                  } else {
-                    // Display timestamp and value
-                    return ListTile(
-                      title: Text(displayedData[index].timestamp.toString()),
-                      subtitle: Text(displayedData[index].value.toString()),
-                    );
-                  }
-                },
-              ),
-            ),
-          ),
-        ],
-      ),
     );
   }
 }
