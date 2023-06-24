@@ -29,11 +29,13 @@ class _total_1hState extends State<total_1h> {
           CsvToListConverter().convert(csvData);
 
       final List<DataPoint> data = rowsAsListOfValues
-          .skip(rowsAsListOfValues.length - 90)
+          .skip(rowsAsListOfValues.length - 1000)
           .map<DataPoint>((row) {
         final timeFormatter = DateFormat('hh:mm:ss');
         final timestamp = timeFormatter.parse(row[1].toString());
-        final value = double.parse(row[2].toString().replaceAll(',', '.'));
+        final value = double.parse(row[2].toString()
+            // .replaceAll(',', '.')
+            ); // Replace comma with period
         return DataPoint(timestamp, value);
       }).toList();
 
@@ -73,8 +75,6 @@ class _total_1hState extends State<total_1h> {
   Widget buildChart(List<DataPoint> data) {
     return Container(
       width: MediaQuery.of(context).size.width,
-      // child: RotatedBox(
-      // quarterTurns: 1,
       child: SfCartesianChart(
         zoomPanBehavior: ZoomPanBehavior(
           enablePanning: true,
@@ -94,7 +94,6 @@ class _total_1hState extends State<total_1h> {
               color: secondaryColor),
         ],
       ),
-      // ),
     );
   }
 }
