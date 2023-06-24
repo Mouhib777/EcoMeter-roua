@@ -10,6 +10,7 @@ import 'package:csv/csv.dart';
 import 'package:roua_benamor/constant/constant.dart';
 import 'package:roua_benamor/screens/login.dart';
 import 'package:roua_benamor/screens/total_1h.dart';
+import 'package:roua_benamor/screens/total_1hAVG.dart';
 import 'package:roua_benamor/screens/total_24h.dart';
 
 class HomePage extends StatefulWidget {
@@ -114,7 +115,7 @@ class _HomePageState extends State<HomePage> {
               onTap: () {
                 user_data?["verifié"] == "oui"
                     ? Navigator.push(context,
-                        MaterialPageRoute(builder: (context) => Total24h()))
+                        MaterialPageRoute(builder: (context) => total_1h_AVG()))
                     : EasyLoading.showError("You don't have the access");
               },
             ),

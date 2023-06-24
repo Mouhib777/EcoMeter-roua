@@ -73,6 +73,8 @@ class _total_1hState extends State<total_1h> {
   }
 
   Widget buildChart(List<DataPoint> data) {
+    final int visibleDataPoints = 60;
+
     return Container(
       width: MediaQuery.of(context).size.width,
       child: SfCartesianChart(
@@ -85,6 +87,8 @@ class _total_1hState extends State<total_1h> {
         primaryXAxis: DateTimeAxis(
           dateFormat: DateFormat.Hms(),
           intervalType: DateTimeIntervalType.minutes,
+          visibleMinimum: data[data.length - visibleDataPoints].timestamp,
+          visibleMaximum: data[data.length - 1].timestamp,
         ),
         series: <ChartSeries<DataPoint, DateTime>>[
           LineSeries<DataPoint, DateTime>(
