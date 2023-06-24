@@ -121,7 +121,7 @@ class _total_1h_AVGState extends State<total_1h_AVG> {
   Widget buildChart(List<DataPoint> data) {
     final List<DataPoint> peaks = findPeaks(data);
     final DateTimeAxis primaryXAxis = DateTimeAxis(
-      dateFormat: DateFormat.Hms(),
+      dateFormat: DateFormat('HH:mm'), // Exclude seconds from the format
       intervalType: DateTimeIntervalType.hours,
     );
 
@@ -130,6 +130,13 @@ class _total_1h_AVGState extends State<total_1h_AVG> {
       // child: RotatedBox(
       // quarterTurns: 1,
       child: SfCartesianChart(
+        zoomPanBehavior: ZoomPanBehavior(
+          maximumZoomLevel: 0.01,
+          enablePanning: true,
+          enableDoubleTapZooming: true,
+          enablePinching: true,
+          zoomMode: ZoomMode.x,
+        ),
         primaryXAxis: primaryXAxis,
         series: <ChartSeries>[
           LineSeries<DataPoint, DateTime>(
