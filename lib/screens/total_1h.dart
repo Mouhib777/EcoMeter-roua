@@ -29,13 +29,11 @@ class _total_1hState extends State<total_1h> {
           CsvToListConverter().convert(csvData);
 
       final List<DataPoint> data = rowsAsListOfValues
-          .skip(rowsAsListOfValues.length - 1490)
+          .skip(rowsAsListOfValues.length - 700)
           .map<DataPoint>((row) {
         final timeFormatter = DateFormat('hh:mm:ss');
         final timestamp = timeFormatter.parse(row[1].toString());
-        final value = double.parse(row[2]
-            .toString()
-            .replaceAll(',', '.')); // Replace comma with period
+        final value = double.parse(row[2].toString().replaceAll(',', '.'));
         return DataPoint(timestamp, value);
       }).toList();
 
@@ -73,28 +71,41 @@ class _total_1hState extends State<total_1h> {
   }
 
   Widget buildChart(List<DataPoint> data) {
-    return Container(
-      width: MediaQuery.of(context).size.width,
-      child: SfCartesianChart(
-        zoomPanBehavior: ZoomPanBehavior(
-          enablePanning: true,
-          enableDoubleTapZooming: true,
-          enablePinching: true,
-          zoomMode: ZoomMode.x,
+    final currentTime = DateTime.now();
+    final lastDataPoint = data.last;
+
+    if (currentTime.isBefore(lastDataPoint.timestamp)) {
+      return Center(
+        child: Text(
+          'Chart will be available at ${lastDataPoint.timestamp}',
+          style: TextStyle(fontSize: 16),
         ),
-        primaryXAxis: DateTimeAxis(
-          dateFormat: DateFormat.Hms(),
-          intervalType: DateTimeIntervalType.minutes,
-        ),
-        series: <ChartSeries<DataPoint, DateTime>>[
-          LineSeries<DataPoint, DateTime>(
+      );
+    } else {
+      return Container(
+        width: MediaQuery.of(context).size.width,
+        child: SfCartesianChart(
+          zoomPanBehavior: ZoomPanBehavior(
+            enablePanning: true,
+            enableDoubleTapZooming: true,
+            enablePinching: true,
+            zoomMode: ZoomMode.x,
+          ),
+          primaryXAxis: DateTimeAxis(
+            dateFormat: DateFormat.Hms(),
+            intervalType: DateTimeIntervalType.minutes,
+          ),
+          series: <ChartSeries<DataPoint, DateTime>>[
+            LineSeries<DataPoint, DateTime>(
               dataSource: data,
               xValueMapper: (DataPoint point, _) => point.timestamp,
               yValueMapper: (DataPoint point, _) => point.value,
-              color: secondaryColor),
-        ],
-      ),
-    );
+              color: secondaryColor,
+            ),
+          ],
+        ),
+      );
+    }
   }
 }
 
