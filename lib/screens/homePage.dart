@@ -107,6 +107,17 @@ class _HomePageState extends State<HomePage> {
                     : EasyLoading.showError("You don't have the access");
               },
             ),
+            SpeedDialChild(
+              labelStyle: GoogleFonts.montserrat(),
+              child: Icon(Icons.add_chart),
+              label: 'AVG per hour',
+              onTap: () {
+                user_data?["verifié"] == "oui"
+                    ? Navigator.push(context,
+                        MaterialPageRoute(builder: (context) => Total24h()))
+                    : EasyLoading.showError("You don't have the access");
+              },
+            ),
           ],
         ),
         appBar: AppBar(
