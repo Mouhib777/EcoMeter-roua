@@ -122,7 +122,7 @@ class _total_1h_AVGState extends State<total_1h_AVG> {
     final List<DataPoint> peaks = findPeaks(data);
     final DateTimeAxis primaryXAxis = DateTimeAxis(
       dateFormat: DateFormat.Hms(),
-      intervalType: DateTimeIntervalType.minutes,
+      intervalType: DateTimeIntervalType.hours,
     );
 
     return Container(
