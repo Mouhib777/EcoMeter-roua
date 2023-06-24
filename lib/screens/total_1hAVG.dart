@@ -120,8 +120,6 @@ class _total_1h_AVGState extends State<total_1h_AVG> {
 
   Widget buildChart(List<DataPoint> data) {
     final List<DataPoint> peaks = findPeaks(data);
-
-    // Calculate the visible range of the primary X-axis
     final DateTimeAxis primaryXAxis = DateTimeAxis(
       dateFormat: DateFormat.Hms(),
       intervalType: DateTimeIntervalType.minutes,
