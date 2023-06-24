@@ -28,21 +28,52 @@ class _total_1h_AVGState extends State<total_1h_AVG> {
       final List<List<dynamic>> rowsAsListOfValues =
           CsvToListConverter().convert(csvData);
 
-      final List<DataPoint> data = rowsAsListOfValues
-          .skip(rowsAsListOfValues.length - 700)
-          .map<DataPoint>((row) {
-        final timeFormatter = DateFormat('HH:mm:ss');
-        final timestamp = timeFormatter.parse(row[1]
-            .toString()); // Assuming timestamp is in the first column (index 0)
-        final value = double.parse(row[2].toString().replaceAll(
-            ',', '.')); // Assuming value is in the second column (index 1)
-        return DataPoint(timestamp, value);
-      }).toList();
+      final List<DataPoint> data = [];
+      final int rowCount = rowsAsListOfValues.length;
+      final int startIndex = rowCount > 700 ? rowCount - 700 : 0;
+
+      final List<List<dynamic>> last700Rows =
+          rowsAsListOfValues.sublist(startIndex);
+      final int chunkSize = 60;
+      final int chunkCount = (last700Rows.length / chunkSize).ceil();
+
+      for (int i = 0; i < chunkCount; i++) {
+        final int startIndex = i * chunkSize;
+        final int endIndex = (startIndex + chunkSize) < last700Rows.length
+            ? (startIndex + chunkSize)
+            : last700Rows.length;
+
+        final List<DataPoint> chunkData =
+            last700Rows.sublist(startIndex, endIndex).map<DataPoint>((row) {
+          final timeFormatter = DateFormat('HH:mm:ss');
+          final timestamp = timeFormatter.parse(row[1].toString());
+          final value = double.parse(row[2].toString().replaceAll(',', '.'));
+          return DataPoint(timestamp, value);
+        }).toList();
+
+        final double chunkAverage = calculateAverage(chunkData);
+        final DataPoint averageDataPoint =
+            DataPoint(chunkData.last.timestamp, chunkAverage);
+        data.add(averageDataPoint);
+      }
 
       return data;
     } else {
       throw Exception('Failed to fetch data from Google Sheets');
     }
+  }
+
+  double calculateAverage(List<DataPoint> data) {
+    if (data.isEmpty) {
+      return 0.0;
+    }
+
+    double sum = 0.0;
+    for (final dataPoint in data) {
+      sum += dataPoint.value;
+    }
+
+    return sum / data.length;
   }
 
   @override
@@ -73,6 +104,19 @@ class _total_1h_AVGState extends State<total_1h_AVG> {
   }
 
   Widget buildChart(List<DataPoint> data) {
+    final int last240Rows = 240;
+    final int dataLength = data.length;
+    final int startIndex =
+        dataLength > last240Rows ? dataLength - last240Rows : 0;
+    final List<DataPoint> visibleData = data.sublist(startIndex);
+
+    final DateTimeAxis primaryXAxis = DateTimeAxis(
+      dateFormat: DateFormat.Hms(),
+      intervalType: DateTimeIntervalType.minutes,
+      visibleMinimum: visibleData.first.timestamp,
+      visibleMaximum: visibleData.last.timestamp,
+    );
+
     return Container(
       width: MediaQuery.of(context).size.width,
       child: SfCartesianChart(
@@ -82,16 +126,14 @@ class _total_1h_AVGState extends State<total_1h_AVG> {
           enablePinching: true,
           zoomMode: ZoomMode.x,
         ),
-        primaryXAxis: DateTimeAxis(
-          dateFormat: DateFormat.Hms(),
-          intervalType: DateTimeIntervalType.minutes,
-        ),
+        primaryXAxis: primaryXAxis,
         series: <ChartSeries<DataPoint, DateTime>>[
           LineSeries<DataPoint, DateTime>(
-              dataSource: data,
-              xValueMapper: (DataPoint point, _) => point.timestamp,
-              yValueMapper: (DataPoint point, _) => point.value,
-              color: secondaryColor),
+            dataSource: visibleData,
+            xValueMapper: (DataPoint point, _) => point.timestamp,
+            yValueMapper: (DataPoint point, _) => point.value,
+            color: secondaryColor,
+          ),
         ],
       ),
     );
