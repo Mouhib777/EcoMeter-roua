@@ -142,10 +142,10 @@ class _total_1h_AVGState extends State<total_1h_AVG> {
             color: primaryColor,
             markerSettings: MarkerSettings(
               isVisible: true,
-              color: Colors.blue,
+              color: primaryColor,
               shape: DataMarkerType.circle,
               borderWidth: 1,
-              borderColor: Colors.blue,
+              borderColor: primaryColor,
             ),
           ),
         ],
