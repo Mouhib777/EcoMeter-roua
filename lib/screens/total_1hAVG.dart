@@ -51,7 +51,7 @@ class _total_1h_AVGState extends State<total_1h_AVG> {
       appBar: AppBar(
         centerTitle: true,
         title: Text(
-          'Total Consumption Energy (1h)',
+          'Average per hour',
           style: GoogleFonts.montserrat(fontSize: 16),
         ),
       ),
