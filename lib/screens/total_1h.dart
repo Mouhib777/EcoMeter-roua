@@ -29,13 +29,13 @@ class _total_1hState extends State<total_1h> {
           CsvToListConverter().convert(csvData);
 
       final List<DataPoint> data = rowsAsListOfValues
-          .skip(rowsAsListOfValues.length - 1000)
+          .skip(rowsAsListOfValues.length - 1490)
           .map<DataPoint>((row) {
         final timeFormatter = DateFormat('hh:mm:ss');
         final timestamp = timeFormatter.parse(row[1].toString());
-        final value = double.parse(row[2].toString()
-            // .replaceAll(',', '.')
-            ); // Replace comma with period
+        final value = double.parse(row[2]
+            .toString()
+            .replaceAll(',', '.')); // Replace comma with period
         return DataPoint(timestamp, value);
       }).toList();
 
