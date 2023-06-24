@@ -121,40 +121,40 @@ class _total_1h_AVGState extends State<total_1h_AVG> {
   Widget buildChart(List<DataPoint> data) {
     final List<DataPoint> peaks = findPeaks(data);
 
+    // Calculate the visible range of the primary X-axis
+    final DateTimeAxis primaryXAxis = DateTimeAxis(
+      dateFormat: DateFormat.Hms(),
+      intervalType: DateTimeIntervalType.minutes,
+    );
+
     return Container(
       width: MediaQuery.of(context).size.width,
-      child: SfCartesianChart(
-        zoomPanBehavior: ZoomPanBehavior(
-            enableDoubleTapZooming: false,
-            enableSelectionZooming: false,
-            enableMouseWheelZooming: false,
-            zoomMode: ZoomMode.x,
-            maximumZoomLevel: 5),
-        primaryXAxis: DateTimeAxis(
-          dateFormat: DateFormat.Hms(),
-          intervalType: DateTimeIntervalType.minutes,
-        ),
-        series: <ChartSeries>[
-          LineSeries<DataPoint, DateTime>(
-            dataSource: data,
-            xValueMapper: (DataPoint point, _) => point.timestamp,
-            yValueMapper: (DataPoint point, _) => point.value,
-            color: secondaryColor,
-          ),
-          ScatterSeries<DataPoint, DateTime>(
-            dataSource: peaks,
-            xValueMapper: (DataPoint point, _) => point.timestamp,
-            yValueMapper: (DataPoint point, _) => point.value,
-            color: primaryColor,
-            markerSettings: MarkerSettings(
-              isVisible: true,
-              color: primaryColor,
-              shape: DataMarkerType.circle,
-              borderWidth: 1,
-              borderColor: primaryColor,
+      child: RotatedBox(
+        quarterTurns: 1,
+        child: SfCartesianChart(
+          primaryXAxis: primaryXAxis,
+          series: <ChartSeries>[
+            LineSeries<DataPoint, DateTime>(
+              dataSource: data,
+              xValueMapper: (DataPoint point, _) => point.timestamp,
+              yValueMapper: (DataPoint point, _) => point.value,
+              color: secondaryColor,
             ),
-          ),
-        ],
+            ScatterSeries<DataPoint, DateTime>(
+              dataSource: peaks,
+              xValueMapper: (DataPoint point, _) => point.timestamp,
+              yValueMapper: (DataPoint point, _) => point.value,
+              color: primaryColor,
+              markerSettings: MarkerSettings(
+                isVisible: true,
+                color: primaryColor,
+                shape: DataMarkerType.circle,
+                borderWidth: 1,
+                borderColor: primaryColor,
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
