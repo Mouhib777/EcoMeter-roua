@@ -124,6 +124,11 @@ class _total_1h_AVGState extends State<total_1h_AVG> {
     return Container(
       width: MediaQuery.of(context).size.width,
       child: SfCartesianChart(
+        zoomPanBehavior: ZoomPanBehavior(
+          enableDoubleTapZooming: false,
+          enableSelectionZooming: false,
+          enableMouseWheelZooming: false,
+        ),
         primaryXAxis: DateTimeAxis(
           dateFormat: DateFormat.Hms(),
           intervalType: DateTimeIntervalType.minutes,
