@@ -29,22 +29,43 @@ class _Total24hState extends State<Total24h> {
           CsvToListConverter().convert(csvData);
 
       final List<DataPoint> data = [];
-      int rowCounter = 0;
+      final int chunkSize = 1440;
+      final int rowCount = rowsAsListOfValues.length;
+      final int chunkCount = (rowCount / chunkSize).ceil();
 
-      for (var row in rowsAsListOfValues) {
-        if (rowCounter % 500 == 0) {
+      for (int i = 0; i < chunkCount; i++) {
+        final int startIndex = i * chunkSize;
+        final int endIndex = (startIndex + chunkSize) < rowCount
+            ? (startIndex + chunkSize)
+            : rowCount;
+
+        final List<DataPoint> chunkData = rowsAsListOfValues
+            .sublist(startIndex, endIndex)
+            .map<DataPoint>((row) {
           final dateFormatter = DateFormat('dd/MM/yyyy');
           final timestamp = dateFormatter.parse(row[0].toString());
           final value = double.parse(row[2].toString().replaceAll(',', '.'));
-          data.add(DataPoint(timestamp, value));
-        }
-        rowCounter++;
+          return DataPoint(timestamp, value);
+        }).toList();
+
+        final double chunkAverage = calculateAverage(chunkData);
+        final DataPoint averageDataPoint =
+            DataPoint(chunkData.last.timestamp, chunkAverage);
+        data.add(averageDataPoint);
       }
 
       return data;
     } else {
       throw Exception('Failed to fetch data from Google Sheets');
     }
+  }
+
+  double calculateAverage(List<DataPoint> data) {
+    double sum = 0.0;
+    for (var point in data) {
+      sum += point.value;
+    }
+    return sum / data.length;
   }
 
   @override
