@@ -143,29 +143,39 @@ class _total_1h_AVGState extends State<total_1h_AVG> {
             xValueMapper: (DataPoint point, _) => point.timestamp,
             yValueMapper: (DataPoint point, _) => point.value,
             color: secondaryColor,
-          ),
-          ScatterSeries<DataPoint, DateTime>(
-            dataSource: peaks,
-            xValueMapper: (DataPoint point, _) => point.timestamp,
-            yValueMapper: (DataPoint point, _) => point.value,
-            color: primaryColor,
-            markerSettings: MarkerSettings(
-              isVisible: true,
-              color: primaryColor,
-              shape: DataMarkerType.circle,
-              borderWidth: 2,
-              borderColor: primaryColor,
-            ),
             dataLabelSettings: DataLabelSettings(
               isVisible: true,
-              labelAlignment: ChartDataLabelAlignment.outer,
+              textStyle: GoogleFonts.montserrat(
+                  color: primaryColor, fontWeight: FontWeight.bold),
+              labelAlignment: ChartDataLabelAlignment.auto,
               labelPosition: ChartDataLabelPosition.outside,
-              textStyle:
-                  TextStyle(color: primaryColor, fontWeight: FontWeight.bold),
+              // labelAlignment: ChartAlignment.near,
             ),
             dataLabelMapper: (DataPoint point, _) =>
                 point.value.toStringAsFixed(2),
           ),
+          // ScatterSeries<DataPoint, DateTime>(
+          //   dataSource: peaks,
+          //   xValueMapper: (DataPoint point, _) => point.timestamp,
+          //   yValueMapper: (DataPoint point, _) => point.value,
+          //   color: primaryColor,
+          //   markerSettings: MarkerSettings(
+          //     isVisible: true,
+          //     color: primaryColor,
+          //     shape: DataMarkerType.circle,
+          //     borderWidth: 2,
+          //     borderColor: primaryColor,
+          //   ),
+          //   dataLabelSettings: DataLabelSettings(
+          //     isVisible: true,
+          //     labelAlignment: ChartDataLabelAlignment.outer,
+          //     labelPosition: ChartDataLabelPosition.outside,
+          //     textStyle:
+          //         TextStyle(color: primaryColor, fontWeight: FontWeight.bold),
+          //   ),
+          //   dataLabelMapper: (DataPoint point, _) =>
+          //       point.value.toStringAsFixed(2),
+          // ),
         ],
       ),
     );
