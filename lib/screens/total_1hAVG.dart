@@ -30,21 +30,23 @@ class _total_1h_AVGState extends State<total_1h_AVG> {
 
       final List<DataPoint> data = [];
       final int rowCount = rowsAsListOfValues.length;
-      final int startIndex = rowCount > 700 ? rowCount - 800 : 0;
+      final int startIndex = rowCount > 360
+          ? rowCount - 360
+          : 0; // Update startIndex to get the last 360 rows
 
-      final List<List<dynamic>> last700Rows =
+      final List<List<dynamic>> last360Rows =
           rowsAsListOfValues.sublist(startIndex);
       final int chunkSize = 60;
-      final int chunkCount = (last700Rows.length / chunkSize).ceil();
+      final int chunkCount = (last360Rows.length / chunkSize).ceil();
 
       for (int i = 0; i < chunkCount; i++) {
         final int startIndex = i * chunkSize;
-        final int endIndex = (startIndex + chunkSize) < last700Rows.length
+        final int endIndex = (startIndex + chunkSize) < last360Rows.length
             ? (startIndex + chunkSize)
-            : last700Rows.length;
+            : last360Rows.length;
 
         final List<DataPoint> chunkData =
-            last700Rows.sublist(startIndex, endIndex).map<DataPoint>((row) {
+            last360Rows.sublist(startIndex, endIndex).map<DataPoint>((row) {
           final timeFormatter = DateFormat('HH:mm:ss');
           final timestamp = timeFormatter.parse(row[1].toString());
           final value = double.parse(row[2].toString().replaceAll(',', '.'));
@@ -131,7 +133,7 @@ class _total_1h_AVGState extends State<total_1h_AVG> {
       // quarterTurns: 1,
       child: SfCartesianChart(
         zoomPanBehavior: ZoomPanBehavior(
-          maximumZoomLevel: 0.01,
+          // maximumZoomLevel: 0.001,
           enablePanning: true,
           enableDoubleTapZooming: true,
           enablePinching: true,
