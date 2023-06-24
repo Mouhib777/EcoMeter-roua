@@ -49,8 +49,10 @@ class _total_1h_AVGState extends State<total_1h_AVG> {
             last360Rows.sublist(startIndex, endIndex).map<DataPoint>((row) {
           final timeFormatter = DateFormat('HH:mm:ss');
           final timestamp = timeFormatter.parse(row[1].toString());
-          final value = double.parse(row[2].toString().replaceAll(',', '.'));
-          return DataPoint(timestamp, value);
+          final value =
+              // double.parse
+              (row[2].toString().replaceAll(',', '.'));
+          return DataPoint(timestamp, double.parse(value));
         }).toList();
 
         final double chunkAverage = calculateAverage(chunkData);
