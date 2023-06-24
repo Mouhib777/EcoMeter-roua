@@ -30,7 +30,7 @@ class _total_1h_AVGState extends State<total_1h_AVG> {
 
       final List<DataPoint> data = [];
       final int rowCount = rowsAsListOfValues.length;
-      final int startIndex = rowCount > 700 ? rowCount - 700 : 0;
+      final int startIndex = rowCount > 700 ? rowCount - 800 : 0;
 
       final List<List<dynamic>> last700Rows =
           rowsAsListOfValues.sublist(startIndex);
@@ -76,6 +76,21 @@ class _total_1h_AVGState extends State<total_1h_AVG> {
     return sum / data.length;
   }
 
+  List<DataPoint> findPeaks(List<DataPoint> data) {
+    final List<DataPoint> peaks = [];
+
+    if (data.length >= 3) {
+      for (int i = 1; i < data.length - 1; i++) {
+        if (data[i].value > data[i - 1].value &&
+            data[i].value > data[i + 1].value) {
+          peaks.add(data[i]);
+        }
+      }
+    }
+
+    return peaks;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -104,35 +119,34 @@ class _total_1h_AVGState extends State<total_1h_AVG> {
   }
 
   Widget buildChart(List<DataPoint> data) {
-    final int last240Rows = 240;
-    final int dataLength = data.length;
-    final int startIndex =
-        dataLength > last240Rows ? dataLength - last240Rows : 0;
-    final List<DataPoint> visibleData = data.sublist(startIndex);
-
-    final DateTimeAxis primaryXAxis = DateTimeAxis(
-      dateFormat: DateFormat.Hms(),
-      intervalType: DateTimeIntervalType.minutes,
-      visibleMinimum: visibleData.first.timestamp,
-      visibleMaximum: visibleData.last.timestamp,
-    );
+    final List<DataPoint> peaks = findPeaks(data);
 
     return Container(
       width: MediaQuery.of(context).size.width,
       child: SfCartesianChart(
-        zoomPanBehavior: ZoomPanBehavior(
-          enablePanning: true,
-          enableDoubleTapZooming: true,
-          enablePinching: true,
-          zoomMode: ZoomMode.x,
+        primaryXAxis: DateTimeAxis(
+          dateFormat: DateFormat.Hms(),
+          intervalType: DateTimeIntervalType.minutes,
         ),
-        primaryXAxis: primaryXAxis,
-        series: <ChartSeries<DataPoint, DateTime>>[
+        series: <ChartSeries>[
           LineSeries<DataPoint, DateTime>(
-            dataSource: visibleData,
+            dataSource: data,
             xValueMapper: (DataPoint point, _) => point.timestamp,
             yValueMapper: (DataPoint point, _) => point.value,
             color: secondaryColor,
+          ),
+          ScatterSeries<DataPoint, DateTime>(
+            dataSource: peaks,
+            xValueMapper: (DataPoint point, _) => point.timestamp,
+            yValueMapper: (DataPoint point, _) => point.value,
+            color: primaryColor,
+            markerSettings: MarkerSettings(
+              isVisible: true,
+              color: Colors.blue,
+              shape: DataMarkerType.circle,
+              borderWidth: 1,
+              borderColor: Colors.blue,
+            ),
           ),
         ],
       ),
