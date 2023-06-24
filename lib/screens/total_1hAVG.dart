@@ -129,11 +129,8 @@ class _total_1h_AVGState extends State<total_1h_AVG> {
 
     return Container(
       width: MediaQuery.of(context).size.width,
-      // child: RotatedBox(
-      // quarterTurns: 1,
       child: SfCartesianChart(
         zoomPanBehavior: ZoomPanBehavior(
-          // maximumZoomLevel: 0.001,
           enablePanning: true,
           enableDoubleTapZooming: true,
           enablePinching: true,
@@ -141,7 +138,7 @@ class _total_1h_AVGState extends State<total_1h_AVG> {
         ),
         primaryXAxis: primaryXAxis,
         series: <ChartSeries>[
-          LineSeries<DataPoint, DateTime>(
+          StepLineSeries<DataPoint, DateTime>(
             dataSource: data,
             xValueMapper: (DataPoint point, _) => point.timestamp,
             yValueMapper: (DataPoint point, _) => point.value,
@@ -156,12 +153,20 @@ class _total_1h_AVGState extends State<total_1h_AVG> {
               isVisible: true,
               color: primaryColor,
               shape: DataMarkerType.circle,
-              borderWidth: 1,
+              borderWidth: 2,
               borderColor: primaryColor,
             ),
+            dataLabelSettings: DataLabelSettings(
+              isVisible: true,
+              labelAlignment: ChartDataLabelAlignment.outer,
+              labelPosition: ChartDataLabelPosition.outside,
+              textStyle:
+                  TextStyle(color: primaryColor, fontWeight: FontWeight.bold),
+            ),
+            dataLabelMapper: (DataPoint point, _) =>
+                point.value.toStringAsFixed(2),
           ),
         ],
-        // ),
       ),
     );
   }
