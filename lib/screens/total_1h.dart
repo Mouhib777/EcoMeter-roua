@@ -118,19 +118,6 @@ class _total_1hState extends State<total_1h> {
 
     return peakDataPoints;
   }
-
-  // List<DataPoint> getPeakDataPoints(List<DataPoint> data) {
-  //   List<DataPoint> peakDataPoints = [];
-
-  //   for (int i = 1; i < data.length - 1; i++) {
-  //     if (data[i].value > data[i - 1].value &&
-  //         data[i].value > data[i + 1].value) {
-  //       peakDataPoints.add(data[i]);
-  //     }
-  //   }
-
-  //   return peakDataPoints;
-  // }
 }
 
 class DataPoint {
