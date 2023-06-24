@@ -32,10 +32,8 @@ class _total_1hState extends State<total_1h> {
           .skip(rowsAsListOfValues.length - 700)
           .map<DataPoint>((row) {
         final timeFormatter = DateFormat('HH:mm:ss');
-        final timestamp = timeFormatter.parse(row[1]
-            .toString()); // Assuming timestamp is in the first column (index 0)
-        final value = double.parse(row[2].toString().replaceAll(
-            ',', '.')); // Assuming value is in the second column (index 1)
+        final timestamp = timeFormatter.parse(row[1].toString());
+        final value = double.parse(row[2].toString().replaceAll(',', '.'));
         return DataPoint(timestamp, value);
       }).toList();
 
