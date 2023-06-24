@@ -78,12 +78,12 @@ class _total_1hState extends State<total_1h> {
     return Container(
       width: MediaQuery.of(context).size.width,
       child: SfCartesianChart(
-        zoomPanBehavior: ZoomPanBehavior(
-          enablePanning: true,
-          enableDoubleTapZooming: true,
-          enablePinching: true,
-          zoomMode: ZoomMode.x,
-        ),
+        // zoomPanBehavior: ZoomPanBehavior(
+        //   enablePanning: true,
+        //   enableDoubleTapZooming: true,
+        //   enablePinching: true,
+        //   zoomMode: ZoomMode.x,
+        // ),
         primaryXAxis: DateTimeAxis(
           dateFormat: DateFormat.Hms(),
           intervalType: DateTimeIntervalType.minutes,
