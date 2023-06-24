@@ -13,7 +13,6 @@ class total_1h extends StatefulWidget {
 
 class _total_1hState extends State<total_1h> {
   List<List<dynamic>> sheetData = [];
-  List<DataPoint> displayedData = [];
 
   @override
   void initState() {
@@ -21,7 +20,7 @@ class _total_1hState extends State<total_1h> {
     fetchDataFromGoogleSheets();
   }
 
-  Future<void> fetchDataFromGoogleSheets() async {
+  Future<List<DataPoint>> fetchDataFromGoogleSheets() async {
     final response = await http.get(Uri.parse(url2GoogleSheet));
 
     if (response.statusCode == 200) {
@@ -29,38 +28,19 @@ class _total_1hState extends State<total_1h> {
       final List<List<dynamic>> rowsAsListOfValues =
           CsvToListConverter().convert(csvData);
 
-      final List<DataPoint> data = rowsAsListOfValues.map<DataPoint>((row) {
-        final dateFormatter = DateFormat('dd/MM/yyyy');
+      final List<DataPoint> data = rowsAsListOfValues
+          .skip(rowsAsListOfValues.length - 90)
+          .map<DataPoint>((row) {
         final timeFormatter = DateFormat('hh:mm:ss');
-        final date = dateFormatter.parse(row[0].toString());
         final timestamp = timeFormatter.parse(row[1].toString());
         final value = double.parse(row[2].toString().replaceAll(',', '.'));
-
-        return DataPoint(date, timestamp, value);
+        return DataPoint(timestamp, value);
       }).toList();
 
-      setState(() {
-        sheetData = rowsAsListOfValues;
-        displayedData = data.sublist(data.length - 60);
-      });
+      return data;
     } else {
       throw Exception('Failed to fetch data from Google Sheets');
     }
-  }
-
-  void updateDisplayedData(int startIndex) {
-    setState(() {
-      displayedData =
-          sheetData.sublist(startIndex, startIndex + 60).map<DataPoint>((row) {
-        final dateFormatter = DateFormat('dd/MM/yyyy');
-        final timeFormatter = DateFormat('hh:mm:ss');
-        final date = dateFormatter.parse(row[0].toString());
-        final timestamp = timeFormatter.parse(row[1].toString());
-        final value = double.parse(row[2].toString().replaceAll(',', '.'));
-
-        return DataPoint(date, timestamp, value);
-      }).toList();
-    });
   }
 
   @override
@@ -73,78 +53,55 @@ class _total_1hState extends State<total_1h> {
           style: GoogleFonts.montserrat(fontSize: 16),
         ),
       ),
-      body: displayedData.isEmpty // Add a check for empty data
-          ? Center(child: CircularProgressIndicator())
-          : Column(
-              children: [
-                Container(
-                  height: 400,
-                  child: SfCartesianChart(
-                    primaryXAxis: DateTimeAxis(
-                      dateFormat: DateFormat('dd/MM/yyyy'),
-                      intervalType: DateTimeIntervalType.days,
-                    ),
-                    series: <ChartSeries<DataPoint, DateTime>>[
-                      LineSeries<DataPoint, DateTime>(
-                        dataSource: displayedData,
-                        xValueMapper: (DataPoint point, _) => point.date,
-                        yValueMapper: (DataPoint point, _) => point.value,
-                        color: Colors.blue,
-                      ),
-                    ],
-                  ),
-                ),
-                Expanded(
-                  child: NotificationListener<ScrollNotification>(
-                    onNotification: (scrollNotification) {
-                      if (scrollNotification is ScrollUpdateNotification) {
-                        final pixels = scrollNotification.metrics.pixels;
-                        final itemExtent =
-                            60.0; // Height of each row in the chart
+      body: FutureBuilder<List<DataPoint>>(
+        future: fetchDataFromGoogleSheets(),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return Center(child: CircularProgressIndicator());
+          } else if (snapshot.hasError) {
+            return Center(child: Text('Error fetching data'));
+          } else if (snapshot.hasData) {
+            return buildChart(snapshot.data!);
+          } else {
+            return Center(child: Text('No data available'));
+          }
+        },
+      ),
+    );
+  }
 
-                        final startIndex = (pixels / itemExtent).floor();
-                        updateDisplayedData(startIndex);
-                      }
-                      return false;
-                    },
-                    child: ListView.builder(
-                      itemCount: displayedData.length,
-                      itemExtent: 60.0, // Height of each row in the chart
-                      itemBuilder: (context, index) {
-                        if (index == 0 ||
-                            displayedData[index].date !=
-                                displayedData[index - 1].date) {
-                          // Display the date once per day
-                          return ListTile(
-                            title: Text(
-                              DateFormat('dd/MM/yyyy')
-                                  .format(displayedData[index].date),
-                              style: TextStyle(fontWeight: FontWeight.bold),
-                            ),
-                          );
-                        } else {
-                          // Display timestamp and value
-                          return ListTile(
-                            title:
-                                Text(displayedData[index].timestamp.toString()),
-                            subtitle:
-                                Text(displayedData[index].value.toString()),
-                          );
-                        }
-                      },
-                    ),
-                  ),
-                ),
-              ],
-            ),
+  Widget buildChart(List<DataPoint> data) {
+    return Container(
+      width: MediaQuery.of(context).size.width,
+      // child: RotatedBox(
+      // quarterTurns: 1,
+      child: SfCartesianChart(
+        zoomPanBehavior: ZoomPanBehavior(
+          enablePanning: true,
+          enableDoubleTapZooming: true,
+          enablePinching: true,
+          zoomMode: ZoomMode.x,
+        ),
+        primaryXAxis: DateTimeAxis(
+          dateFormat: DateFormat.Hms(),
+          intervalType: DateTimeIntervalType.minutes,
+        ),
+        series: <ChartSeries<DataPoint, DateTime>>[
+          LineSeries<DataPoint, DateTime>(
+              dataSource: data,
+              xValueMapper: (DataPoint point, _) => point.timestamp,
+              yValueMapper: (DataPoint point, _) => point.value,
+              color: secondaryColor),
+        ],
+      ),
+      // ),
     );
   }
 }
 
 class DataPoint {
-  final DateTime date;
   final DateTime timestamp;
   final double value;
 
-  DataPoint(this.date, this.timestamp, this.value);
+  DataPoint(this.timestamp, this.value);
 }
