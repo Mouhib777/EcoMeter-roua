@@ -321,7 +321,7 @@ class _HomePageState extends State<HomePage> {
                                   SizedBox(height: 8.0),
                                   Text(
                                     data.isNotEmpty
-                                        ? data.last[4].toString() + ' KW'
+                                        ? data.last[4].toString() + ' J'
                                         : '',
                                     style: GoogleFonts.montserrat(
                                       fontSize: 20,
